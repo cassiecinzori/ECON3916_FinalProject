@@ -6,11 +6,11 @@
 
 ## 1. Problem Statement
 
-Obesity and weight-related illness represent a leading public health challenge in the United States. Early identification of individuals at elevated risk allows providers to intervene before weight-related complications develop — but formal BMI computation requires physical measurement and is often not the first step in a clinical encounter.
+Obesity and weight-related illness represent a leading public health challenge in the United States. Early identification of individuals at elevated risk allows providers to intervene before weight-related complications develop - but formal BMI computation requires physical measurement and is often not the first step in a clinical encounter.
 
 **Prediction question:** Can we predict an individual's BMI weight class (Underweight, Normal Weight, Overweight, or Obese) from behavioral, demographic, and clinical health indicators available at a routine medical intake?
 
-This is a **prediction problem, not a causal inference problem.** The model identifies patterns in observable features that are associated with BMI category — it does not claim that any feature causally drives weight outcomes.
+This is a **prediction problem, not a causal inference problem.** The model identifies patterns in observable features that are associated with BMI category - it does not claim that any feature causally drives weight outcomes.
 
 **Stakeholder:** Primary care providers. The model would help a clinician or intake coordinator flag patients for weight-related health discussions based on information gathered before a physical exam is complete, using features like age, physical activity level, blood pressure, and socioeconomic status. This enables earlier, more targeted outreach.
 
@@ -31,9 +31,9 @@ This is a **prediction problem, not a causal inference problem.** The model iden
 - *Lifestyle behaviors:* Physical Activity (binary), Smoking history (binary), Alcohol use (binary), Diabetes diagnosis (binary)
 - *Clinical indicators:* Systolic Blood Pressure (continuous), Total Cholesterol (continuous), Height (continuous)
 
-**Target variable:** `BMI_WHO` — four-class ordinal label: UnderWeight, NormWeight, OverWeight, Obese. Class distribution is moderately imbalanced: Obese (35.3%), OverWeight (33.8%), NormWeight (28.9%), UnderWeight (1.9%).
+**Target variable:** `BMI_WHO` - four-class ordinal label: UnderWeight, NormWeight, OverWeight, Obese. Class distribution is moderately imbalanced: Obese (35.3%), OverWeight (33.8%), NormWeight (28.9%), UnderWeight (1.9%).
 
-**Quality assessment:** Missing data was assessed using the MCAR/MAR/MNAR framework. The `Depressed` column (81% missing) was dropped. Remaining missingness — ranging from 0.8% (Height) to 12.0% (Alcohol12PlusYr) — was assessed as likely MAR and handled via median imputation for continuous features and mode imputation for categorical features, fit only on training data to prevent leakage.
+**Quality assessment:** Missing data was assessed using the MCAR/MAR/MNAR framework. The `Depressed` column (81% missing) was dropped. Remaining missingness - ranging from 0.8% (Height) to 12.0% (Alcohol12PlusYr) - was assessed as likely MAR and handled via median imputation for continuous features and mode imputation for categorical features, fit only on training data to prevent leakage.
 
 A key limitation of the dataset is the absence of body weight. BMI is mathematically computed from height and weight, so predicting BMI category without weight is inherently constrained. This represents the performance ceiling for any model trained on these features.
 
@@ -47,9 +47,9 @@ A key limitation of the dataset is the absence of body weight. BMI is mathematic
 
 **Models compared:**
 
-*Model 1 — Logistic Regression (baseline):* Multinomial logistic regression using the `lbfgs` solver with `max_iter=1000`. Selected as baseline because it is interpretable, fast to train, and provides a linear decision boundary against which to compare more complex models. No hyperparameter tuning beyond solver selection.
+*Model 1 - Logistic Regression (baseline):* Multinomial logistic regression using the `lbfgs` solver with `max_iter=1000`. Selected as baseline because it is interpretable, fast to train, and provides a linear decision boundary against which to compare more complex models. No hyperparameter tuning beyond solver selection.
 
-*Model 2 — Random Forest:* Ensemble of 200 decision trees with `max_depth=15` and `min_samples_leaf=2`. Selected because Random Forests capture non-linear feature interactions and tend to be robust to moderate class imbalance. Hyperparameters were chosen based on model complexity considerations: `max_depth=15` is deep enough to capture interactions without overfitting, and `min_samples_leaf=2` prevents overfitting on rare classes.
+*Model 2 - Random Forest:* Ensemble of 200 decision trees with `max_depth=15` and `min_samples_leaf=2`. Selected because Random Forests capture non-linear feature interactions and tend to be robust to moderate class imbalance. Hyperparameters were chosen based on model complexity considerations: `max_depth=15` is deep enough to capture interactions without overfitting, and `min_samples_leaf=2` prevents overfitting on rare classes.
 
 **Cross-validation:** 5-fold stratified cross-validation was used to evaluate generalization. Stratification ensured the UnderWeight minority class appeared in each fold. Cross-validation scores were used to compute 95% confidence intervals on accuracy (mean ± 1.96 × standard deviation across folds).
 
@@ -63,18 +63,18 @@ A key limitation of the dataset is the absence of body weight. BMI is mathematic
 
 | Model | CV Accuracy | 95% CI | Test Accuracy | Balanced Accuracy |
 |-------|------------|--------|--------------|-------------------|
-| Random baseline | 25.0% | — | — | — |
-| Majority class baseline | 35.4% | — | — | — |
+| Random baseline | 25.0% | - | - | - |
+| Majority class baseline | 35.4% | - | - | - |
 | Logistic Regression | 45.1% | ±4.3% | 46.3% | 34.0% |
 | Random Forest | 46.0% | ±2.4% | 46.2% | 33.9% |
 
 Both models substantially outperform the random baseline (25%) and the majority-class baseline (35.4%). The Random Forest shows lower variance across folds (±2.4% vs ±4.3%), indicating more stable predictions. Overall accuracy is similar, but the Random Forest is preferred for deployment due to its consistency.
 
-**Per-class performance (Random Forest):** NormWeight and Obese are predicted with reasonable precision (~51% and ~46% respectively). OverWeight is harder to distinguish — it sits in the middle of the ordinal scale and shares characteristics with both adjacent classes. UnderWeight recall is near zero due to severe class imbalance (only 90 observations out of 4,761).
+**Per-class performance (Random Forest):** NormWeight and Obese are predicted with reasonable precision (~51% and ~46% respectively). OverWeight is harder to distinguish - it sits in the middle of the ordinal scale and shares characteristics with both adjacent classes. UnderWeight recall is near zero due to severe class imbalance (only 90 observations out of 4,761).
 
 **Feature importance:** ⚠️ *The following reflects predictive association, not causal effect.* The four strongest predictors are the continuous clinical and demographic features: Age, Systolic Blood Pressure, Total Cholesterol, and Height each contribute roughly 11–13% of total importance. Categorical behavioral features (Education, Income, Race, Smoking) each contribute 2–3%, suggesting that while they are informative in aggregate, no single behavioral feature dominates.
 
-**Uncertainty:** Confidence intervals on CV accuracy are reported above. The model's confidence scores on individual predictions should be interpreted cautiously — particularly for inputs near class boundaries (e.g., borderline OverWeight vs. Obese inputs), where the model's predicted probabilities are more evenly distributed. The bootstrap stability check in the Streamlit dashboard provides a practical sense of prediction uncertainty at the individual level.
+**Uncertainty:** Confidence intervals on CV accuracy are reported above. The model's confidence scores on individual predictions should be interpreted cautiously - particularly for inputs near class boundaries (e.g., borderline OverWeight vs. Obese inputs), where the model's predicted probabilities are more evenly distributed. The bootstrap stability check in the Streamlit dashboard provides a practical sense of prediction uncertainty at the individual level.
 
 ---
 
@@ -94,4 +94,4 @@ Both models substantially outperform the random baseline (25%) and the majority-
 
 ---
 
-*Word count: ~900 words (within 5-page target). All feature importance findings are predictive associations only — not causal claims.*
+*Word count: ~900 words (within 5-page target). All feature importance findings are predictive associations only - not causal claims.*
