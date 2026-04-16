@@ -16,7 +16,7 @@ from sklearn.impute import SimpleImputer
 # ── Page config ───────────────────────────────────────────────────────────────
 st.set_page_config(
     page_title="BMI Weight Class Predictor",
-    page_icon="🏥",
+    page_icon=":hospital:",
     layout="wide"
 )
 
@@ -82,15 +82,15 @@ MARITAL_DISPLAY = {
 }
 WORK_DISPLAY = {'Working': 'Working', 'Not Working': 'NotWorking', 'Looking for Work': 'Looking'}
 INCOME_DISPLAY = {
-    '$0 – $4,999': '0-4999', '$5,000 – $9,999': '5000-9999',
-    '$10,000 – $14,999': '10000-14999', '$15,000 – $19,999': '15000-19999',
-    '$20,000 – $24,999': '20000-24999', '$25,000 – $34,999': '25000-34999',
-    '$35,000 – $44,999': '35000-44999', '$45,000 – $54,999': '45000-54999',
-    '$55,000 – $64,999': '55000-64999', '$65,000 – $74,999': '65000-74999',
-    '$75,000 – $99,999': '75000-99999', '$100,000 or more': 'more 99999'
+    '$0 - $4,999': '0-4999', '$5,000 - $9,999': '5000-9999',
+    '$10,000 - $14,999': '10000-14999', '$15,000 - $19,999': '15000-19999',
+    '$20,000 - $24,999': '20000-24999', '$25,000 - $34,999': '25000-34999',
+    '$35,000 - $44,999': '35000-44999', '$45,000 - $54,999': '45000-54999',
+    '$55,000 - $64,999': '55000-64999', '$65,000 - $74,999': '65000-74999',
+    '$75,000 - $99,999': '75000-99999', '$100,000 or more': 'more 99999'
 }
 EDUCATION_DISPLAY = {
-    '8th Grade or Less': '8th Grade', '9th – 11th Grade': '9 - 11th Grade',
+    '8th Grade or Less': '8th Grade', '9th - 11th Grade': '9 - 11th Grade',
     'High School / GED': 'High School', 'Some College': 'Some College',
     'College Graduate': 'College Grad'
 }
@@ -100,7 +100,7 @@ RACE_DISPLAY = {
 }
 
 # ── Load / train models ───────────────────────────────────────────────────────
-@st.cache_resource(show_spinner="Training models on NHANES data — about 30 seconds...")
+@st.cache_resource(show_spinner="Training models on NHANES data - about 30 seconds...")
 def load_models():
     df = pd.read_csv('Obesity_DataSet_2.csv')
     df = df.drop(columns=['Depressed']).dropna(subset=['BMI_WHO', 'Diabetes']).drop_duplicates()
@@ -132,13 +132,13 @@ def load_models():
 rf_model, lr_model, rf_cv_scores, lr_cv_scores = load_models()
 
 # ── Header ────────────────────────────────────────────────────────────────────
-st.markdown("## 🏥 BMI Weight Class Predictor")
+st.markdown("## BMI Weight Class Predictor")
 st.markdown(
     "Predict an individual's BMI weight class from behavioral, demographic, and "
     "clinical health indicators using NHANES data (CDC)."
 )
 st.caption(
-    "⚠️ Predictive model only — not a diagnostic tool. "
+    "Predictive model only - not a diagnostic tool. "
     "Feature importance reflects predictive associations, not causal effects. "
     "For research and educational purposes only."
 )
@@ -289,7 +289,7 @@ st.divider()
 
 with st.expander("About this model"):
     st.markdown("""
-**Dataset:** NHANES (National Health and Nutrition Examination Survey), CDC —
+**Dataset:** NHANES (National Health and Nutrition Examination Survey), CDC -
 https://www.cdc.gov/nchs/nhanes/index.htm
 
 **Sample:** ~4,761 observations after deduplication | 80/20 stratified train/test split | `random_state=42`
@@ -298,17 +298,17 @@ https://www.cdc.gov/nchs/nhanes/index.htm
 |---|---|---|
 | Random Forest | ~46.0% | ±2.4% |
 | Logistic Regression | ~45.1% | ±4.3% |
-| Majority class baseline | 35.4% | — |
-| Random baseline | 25.0% | — |
+| Majority class baseline | 35.4% | - |
+| Random baseline | 25.0% | - |
 
 **Performance note:** This dataset does not include body weight. Since BMI is derived from
 height and weight, predicting BMI category without weight imposes a ceiling on model accuracy.
 Both models substantially outperform chance.
 
-⚠️ Feature importance reflects predictive associations only — not causal effects.
+Feature importance reflects predictive associations only - not causal effects.
     """)
 
 st.caption(
-    "ECON 3916 Final Project &nbsp;|&nbsp; Cassandra Cinzori &nbsp;|&nbsp; "
-    "Northeastern University &nbsp;|&nbsp; Spring 2026"
+    "ECON 3916 Final Project  |  Cassandra Cinzori  |  "
+    "Northeastern University  |  Spring 2026"
 )
