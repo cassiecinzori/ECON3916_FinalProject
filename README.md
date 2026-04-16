@@ -11,7 +11,7 @@ This project applies supervised machine learning to predict an individual's BMI 
 **Prediction question:** Can we predict BMI weight class from routine health intake data?  
 **Stakeholder:** Primary care providers flagging patients for weight-related interventions  
 **Models:** Logistic Regression (baseline) vs. Random Forest  
-**Target variable:** `BMI_WHO` — four-class classification
+**Target variable:** `BMI_WHO` - four-class classification
 
 > **Note:** This is a prediction problem, not causal inference. Feature importance scores reflect predictive associations, not causal effects.
 
@@ -36,7 +36,7 @@ ECON3916_FinalProject/
 - **URL:** https://www.cdc.gov/nchs/nhanes/index.htm
 - **Accessed:** April 2026
 - **Observations:** 7,481 raw (4,761 after deduplication and dropping missing targets)
-- **Features:** 14 input features — demographics, socioeconomics, lifestyle behaviors, clinical indicators
+- **Features:** 14 input features - demographics, socioeconomics, lifestyle behaviors, clinical indicators
 - **Target:** `BMI_WHO` (UnderWeight / NormWeight / OverWeight / Obese)
 
 ---
